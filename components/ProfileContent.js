@@ -105,19 +105,21 @@ export default function ProfileContent({ activeTab, userId }) {
       {activeTab === 'photos' && (
         <div>
           <Card>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {posts?.length > 0 && posts.map(post => (
-                <div key={post.id} className="rounded-md overflow-hidden h-48 flex items-center shadow-md">
-                  {post.photos && post.photos.length > 0 && post.photos.map((photoUrl, index) => (
+                post.photos && post.photos.length > 0 && post.photos.map((photoUrl, index) => (
+                  <div
+                    key={index}
+                    className="relative w-full h-48 overflow-hidden rounded-md cursor-pointer"
+                    onClick={() => handlePhotoClick(photoUrl)}
+                  >
                     <img
-                      key={index}
                       src={photoUrl}
                       alt="User photo"
-                      className="cursor-pointer"
-                      onClick={() => handlePhotoClick(photoUrl)}
+                      className="object-cover w-full h-full"
                     />
-                  ))}
-                </div>
+                  </div>
+                ))
               ))}
             </div>
           </Card>
@@ -141,4 +143,5 @@ export default function ProfileContent({ activeTab, userId }) {
     </div>
   );
 }
+
 
