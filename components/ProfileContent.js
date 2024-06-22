@@ -123,11 +123,11 @@ export default function ProfileContent({ activeTab, userId }) {
           </Card>
           {selectedPhoto && (
             <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-              <div className="relative">
-                <img src={selectedPhoto} alt="Selected" className="max-w-full max-h-full" />
+              <div className="relative p-4 bg-white rounded-md shadow-md">
+                <img src={selectedPhoto} alt="Selected" className="max-w-full max-h-96" />
                 <button
                   onClick={closeModal}
-                  className="absolute top-0 right-0 mt-4 mr-4 text-white text-xl"
+                  className="absolute top-0 right-0 mt-2 mr-2 text-black text-2xl"
                 >
                   &times;
                 </button>
