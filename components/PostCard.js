@@ -40,11 +40,12 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
       .then(result => setLikes(result.data));
   }
   function fetchComments() {
-    supabase.from('posts')
+    supabase.from('Feedback')
       .select('*, profiles(*)')
       .eq('parent', id)
       .then(result => setComments(result.data));
   }
+
   function openDropdown(e) {
     e.stopPropagation();
     setDropdownOpen(true);
@@ -101,9 +102,9 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
 
   function postComment(ev) {
     ev.preventDefault();
-    supabase.from('posts')
+    supabase.from('Feedback')
       .insert({
-         Feedback:commentText,
+         feedback:commentText,
         author:myProfile.id,
         parent:id,
       })
@@ -267,7 +268,7 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
                   <ReactTimeAgo timeStyle={'twitter'} date={(new Date(comment.created_at)).getTime()} />
                 </span>
               </div>
-              <p className="text-sm">{comment.Feedback}</p>
+              <p className="text-sm">{comment.feedback}</p>
             </div>
           </div>
         ))}
