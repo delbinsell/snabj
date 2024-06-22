@@ -122,15 +122,17 @@ export default function ProfileContent({ activeTab, userId }) {
             </div>
           </Card>
           {selectedPhoto && (
-            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div
+              className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+              onClick={closeModal}
+            >
               <div className="relative p-4 bg-white rounded-md shadow-md">
-                <img src={selectedPhoto} alt="Selected" className="max-w-full max-h-96" />
-                <button
-                  onClick={closeModal}
-                  className="absolute top-0 right-0 mt-2 mr-2 text-black text-2xl"
-                >
-                  &times;
-                </button>
+                <img
+                  src={selectedPhoto}
+                  alt="Selected"
+                  className="max-w-full max-h-96"
+                  onClick={(e) => e.stopPropagation()}
+                />
               </div>
             </div>
           )}
@@ -139,3 +141,4 @@ export default function ProfileContent({ activeTab, userId }) {
     </div>
   );
 }
+
