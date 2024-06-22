@@ -103,7 +103,7 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
     ev.preventDefault();
     supabase.from('posts')
       .insert({
-        content:commentText,
+         Feedback:commentText,
         author:myProfile.id,
         parent:id,
       })
@@ -267,7 +267,7 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
                   <ReactTimeAgo timeStyle={'twitter'} date={(new Date(comment.created_at)).getTime()} />
                 </span>
               </div>
-              <p className="text-sm">{comment.content}</p>
+              <p className="text-sm">{comment.Feedback}</p>
             </div>
           </div>
         ))}

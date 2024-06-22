@@ -28,7 +28,7 @@ export default function ProfileContent({ activeTab, userId }) {
   async function userPosts(userId) {
     const { data, error } = await supabase
       .from('posts')
-      .select('*') // Select all columns including photos
+      .select('*')
       .eq('author', userId);
     if (error) {
       console.error(error);
