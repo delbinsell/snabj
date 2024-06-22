@@ -1,4 +1,5 @@
 import Avatar from "./Avatar";
+import YouTubeVideo from "./YouTubeVideo";
 import Card from "./Card";
 import ClickOutHandler from 'react-clickout-handler'
 import {useContext, useEffect, useState} from "react";
@@ -74,6 +75,8 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
     }
   }
 
+  
+
   const isLikedByMe = !!likes.find(like => like.user_id === myProfile?.id);
 
   function toggleLike() {
@@ -109,6 +112,11 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
         fetchComments();
         setCommentText('');
       })
+  }
+
+  function extractYouTubeVideoId(url) {
+    const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    return match ? match[1] : null;
   }
 
   return (
@@ -198,6 +206,11 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
                 <img src={photo} className="rounded-md" alt=""/>
               </div>
             ))}
+          </div>
+        )}
+        {content && content.includes('youtube.com') && (
+          <div className="mt-2">
+            <YouTubeVideo videoId={extractYouTubeVideoId(content)} />
           </div>
         )}
       </div>

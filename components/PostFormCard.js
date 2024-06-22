@@ -4,6 +4,7 @@ import {useContext, useEffect, useState} from "react";
 import {useSession, useSupabaseClient} from "@supabase/auth-helpers-react";
 import {UserContext} from "../contexts/UserContext";
 import Preloader from "./Preloader";
+import YouTubeVideo from "./YouTubeVideo";
 
 export default function PostFormCard({onPost}) {
   const [content,setContent] = useState('');
@@ -49,6 +50,11 @@ export default function PostFormCard({onPost}) {
       setIsUploading(false);
     }
   }
+  function extractYouTubeVideoId(url) {
+    const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[1].length === 11) ? match[1] : null;
+  }
 
   return (
     <Card>
@@ -65,6 +71,11 @@ export default function PostFormCard({onPost}) {
       {isUploading && (
         <div>
           <Preloader />
+        </div>
+      )}
+      {content && content.includes('youtube.com') && (
+        <div className="mt-2">
+          <YouTubeVideo videoId={extractYouTubeVideoId(content)} />
         </div>
       )}
       {uploads.length > 0 && (
