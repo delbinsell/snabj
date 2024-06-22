@@ -131,7 +131,7 @@ export default function ProfileContent({ activeTab, userId }) {
               <img
                 src={selectedPhoto}
                 alt="Selected"
-                className="max-w-full max-h-full"
+                className="max-w-screen-sm max-h-screen-sm"
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
@@ -141,5 +141,6 @@ export default function ProfileContent({ activeTab, userId }) {
     </div>
   );
 }
+
 
 
