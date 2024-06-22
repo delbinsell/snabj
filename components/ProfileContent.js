@@ -7,6 +7,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 export default function ProfileContent({ activeTab, userId }) {
   const [posts, setPosts] = useState([]);
   const [profile, setProfile] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(null); // Estado para la foto seleccionada
   const supabase = useSupabaseClient();
 
   useEffect(() => {
@@ -43,6 +44,14 @@ export default function ProfileContent({ activeTab, userId }) {
       .select()
       .eq('id', userId);
     return data?.[0];
+  }
+
+  function handlePhotoClick(photoUrl) {
+    setSelectedPhoto(photoUrl);
+  }
+
+  function closeModal() {
+    setSelectedPhoto(null);
   }
 
   return (
@@ -100,12 +109,31 @@ export default function ProfileContent({ activeTab, userId }) {
               {posts?.length > 0 && posts.map(post => (
                 <div key={post.id} className="rounded-md overflow-hidden h-48 flex items-center shadow-md">
                   {post.photos && post.photos.length > 0 && post.photos.map((photoUrl, index) => (
-                    <img key={index} src={photoUrl} alt="User photo" />
+                    <img
+                      key={index}
+                      src={photoUrl}
+                      alt="User photo"
+                      className="cursor-pointer"
+                      onClick={() => handlePhotoClick(photoUrl)}
+                    />
                   ))}
                 </div>
               ))}
             </div>
           </Card>
+          {selectedPhoto && (
+            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+              <div className="relative">
+                <img src={selectedPhoto} alt="Selected" className="max-w-full max-h-full" />
+                <button
+                  onClick={closeModal}
+                  className="absolute top-0 right-0 mt-4 mr-4 text-white text-xl"
+                >
+                  &times;
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
