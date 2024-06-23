@@ -27,7 +27,7 @@ export default function SavedPostsPage() {
   return (
     <Layout>
       <UserContextProvider>
-        <h1 className="text-6xl mb-4 text-gray-300">Saved posts</h1>
+        <h1 className="text-6xl mb-4 text-gray-300">Posts guardados</h1>
         {posts.length > 0 && posts.map(post => (
           <div key={post.id}>
             <PostCard {...post} />
