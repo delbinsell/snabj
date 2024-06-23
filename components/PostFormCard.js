@@ -5,6 +5,8 @@ import {useSession, useSupabaseClient} from "@supabase/auth-helpers-react";
 import {UserContext} from "../contexts/UserContext";
 import Preloader from "./Preloader";
 import YouTubeVideo from "./YouTubeVideo";
+import MapContainer from './MapContainer';
+
 
 export default function PostFormCard({onPost}) {
   const [content,setContent] = useState('');
@@ -13,6 +15,26 @@ export default function PostFormCard({onPost}) {
   const supabase = useSupabaseClient();
   const session = useSession();
   const {profile} = useContext(UserContext);
+  const [location, setLocation] = useState(null);
+  const [showMap, setShowMap] = useState(false);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error('Error obteniendo la ubicación:', error);
+        }
+      );
+    } else {
+      console.error('La geolocalización no está soportada en este navegador.');
+    }
+  }, []);
 
   function createPost() {
     supabase.from('posts').insert({
@@ -56,6 +78,25 @@ export default function PostFormCard({onPost}) {
     return (match && match[1].length === 11) ? match[1] : null;
   }
 
+  function handleLocationClick() {
+    setShowMap(true);
+  }
+
+  function handleMapClick(event) {
+    setLocation({
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    });
+  }
+
+  function createPostWithLocation() {
+    console.log('Ubicación seleccionada:', location);
+    if (onPost) {
+      onPost();
+    }
+  }
+
+
   return (
     <Card>
       <div className="flex gap-2">
@@ -73,11 +114,6 @@ export default function PostFormCard({onPost}) {
           <Preloader />
         </div>
       )}
-      {content && content.includes('youtube.com') && (
-        <div className="mt-2">
-          <YouTubeVideo videoId={extractYouTubeVideoId(content)} />
-        </div>
-      )}
       {uploads.length > 0 && (
         <div className="flex gap-2">
           {uploads.map(upload => (
@@ -86,6 +122,14 @@ export default function PostFormCard({onPost}) {
             </div>
           ))}
         </div>
+      )}
+      {content && content.includes('youtube.com') && (
+        <div className="mt-2">
+          <YouTubeVideo videoId={extractYouTubeVideoId(content)} />
+        </div>
+      )}
+      {showMap && (
+        <MapContainer location={location} onClick={handleMapClick} />
       )}
       <div className="flex gap-5 items-center mt-2">
         <div>
@@ -101,7 +145,7 @@ export default function PostFormCard({onPost}) {
           
         </div>
         <div>
-          <button className="flex gap-1">
+          <button onClick={handleLocationClick} className="flex gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />

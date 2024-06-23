@@ -53,6 +53,7 @@ export default function Home() {
           <PostCard key={post.id} {...post} />
         ))}
       </UserContext.Provider>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAD3WEkpcZhQ-S0iGmcoHl2jshQl6rXYD8&libraries=places"></script>
     </Layout>
   )
 }
