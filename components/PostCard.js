@@ -277,19 +277,20 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
         <div>
           <Avatar url={myProfile?.avatar} />
         </div>
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <form onSubmit={postComment} className="flex items-center gap-2 p-2">
+        <div className="border grow rounded-full relative">
+          <form onSubmit={postComment}>
             <input
               value={commentText}
               onChange={ev => setCommentText(ev.target.value)}
-              className="flex-grow p-2 px-3 rounded-full border border-gray-300 focus:outline-none focus:border-blue-500"
+              className="block w-full p-3 px-4 overflow-hidden h-15 rounded-full"
               placeholder="Dejar un comentario"
             />
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full shadow-md"
+              className="absolute top-0 right-3 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full shadow-md"
+              style={{ marginTop: '4px' }} // Ajusta la distancia hacia arriba según sea necesario
             >
-              Enviar
+              enviar
             </button>
           </form>
         </div>
