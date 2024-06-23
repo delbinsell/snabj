@@ -144,11 +144,15 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
 
   function postComment(ev) {
     ev.preventDefault();
+    if (commentText.trim() === '') { // Verifica si el comentario está vacío o solo contiene espacios en blanco
+      alert('Por favor, ingresa un comentario válido.'); // Muestra una alerta si el comentario está vacío
+      return; // Detiene la ejecución de la función si el comentario está vacío
+    }
     supabase.from('Feedback')
       .insert({
-         feedback:commentText,
-        author:myProfile.id,
-        parent:id,
+        feedback: commentText,
+        author: myProfile.id,
+        parent: id,
       })
       .then(result => {
         console.log(result);
@@ -156,6 +160,7 @@ export default function PostCard({id,content,created_at,photos,profiles:authorPr
         setCommentText('');
       })
   }
+
 
   function extractYouTubeVideoId(url) {
     const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);

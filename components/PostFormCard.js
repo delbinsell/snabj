@@ -37,6 +37,11 @@ export default function PostFormCard({onPost}) {
   }, []);
 
   function createPost() {
+    if (!content.trim()) {
+      alert('Ingrese una publicación válida');
+      return;
+    }
+
     supabase.from('posts').insert({
       author: session.user.id,
       content,
