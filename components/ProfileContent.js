@@ -9,15 +9,53 @@ export default function ProfileContent({ activeTab, userId }) {
   const [profile, setProfile] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null); // Estado para la foto seleccionada
   const supabase = useSupabaseClient();
+  const [isEditingAbout, setIsEditingAbout] = useState(false);
+  const [aboutText, setAboutText] = useState(profile?.about || '');
+
+  useEffect(() => {
+    if (profile) {
+      setAboutText(profile.about);
+    }
+  }, [profile]);
+
 
   useEffect(() => {
     if (!userId) {
       return;
     }
     if (activeTab === 'posts' || activeTab === 'photos') {
-      loadPosts().then(() => { });
+      loadPosts().then(() => {});
     }
+    loadUserProfile(); // Cargar el perfil al montar el componente
   }, [userId, activeTab]);
+  
+
+  async function updateAbout() {
+    const { error } = await supabase
+      .from('profiles')
+      .update({ about: aboutText })
+      .eq('id', userId);
+    if (error) {
+      console.error(error);
+    } else {
+      setIsEditingAbout(false);
+      loadUserProfile(); // Recargar el perfil después de actualizar
+    }
+  }
+  
+
+  async function loadPosts() {
+    const postsData = await userPosts(userId);
+    setPosts(postsData);
+    loadUserProfile(); // Llamar a la función para cargar el perfil
+  }
+  
+  async function loadUserProfile() {
+    const profileData = await userProfile(userId);
+    setProfile(profileData);
+    setAboutText(profileData?.about); // Actualizar el estado del texto "Sobre mí"
+  }
+  
 
   async function loadPosts() {
     const postsData = await userPosts(userId);
@@ -63,15 +101,32 @@ export default function ProfileContent({ activeTab, userId }) {
           ))}
         </div>
       )}
+
       {activeTab === 'about' && (
         <div>
           <Card>
-            <h2 className="text-3xl mb-2">About me</h2>
-            <p className="mb-2 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut doloremque harum maxime mollitia perferendis praesentium quaerat. Adipisci, delectus eum fugiat incidunt iusto molestiae nesciunt odio porro quae quaerat, reprehenderit, sed.</p>
-            <p className="mb-2 text-sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet assumenda error necessitatibus nesciunt quas quidem quisquam reiciendis, similique. Amet consequuntur facilis iste iure minima nisi non praesentium ratione voluptas voluptatem?</p>
+            <h2 className="text-3xl mb-2">Sobre mí</h2>
+            {isEditingAbout ? (
+              <div>
+                <textarea
+                  value={aboutText}
+                  onChange={(e) => setAboutText(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md mb-2"
+                />
+                <button onClick={updateAbout} className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2">Guardar</button>
+                <button onClick={() => setIsEditingAbout(false)} className="bg-gray-300 text-black px-4 py-2 rounded-md">Cancelar</button>
+              </div>
+            ) : (
+              <div>
+                <p className="mb-2 text-sm">{profile?.about || "Aún no has agregado información sobre ti."}</p>
+                <button onClick={() => setIsEditingAbout(true)} className="bg-blue-500 text-white px-4 py-2 rounded-md">Editar</button>
+              </div>
+            )}
           </Card>
         </div>
       )}
+
+      
       {activeTab === 'friends' && (
         <div>
           <Card>
